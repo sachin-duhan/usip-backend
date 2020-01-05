@@ -4,15 +4,9 @@ exports.get_public_notification = (req, res) => {
     Notification.find({
         visiblity: true
     }).then(result => {
-        if (result.length > 0) {
-            res.status(200).json({
-                notifications: result
-            });
-        } else {
-            res.status(200).json({
-                message: 'No Public notification found'
-            });
-        }
+        res.status(200).json({
+            notifications: result
+        });
     }).catch(err => {
         res.status(400).json({
             error: 'Error in getting notification!'
@@ -24,15 +18,9 @@ exports.get_intern_notification = (req, res) => {
     Notification.find({
         visiblity: false
     }).then(result => {
-        if (result.length > 0) {
-            res.status(200).json({
-                notifications: result
-            });
-        } else {
-            res.status(200).json({
-                message: 'No Intern notification found'
-            });
-        }
+        res.status(200).json({
+            notifications: result
+        });
     }).catch(err => {
         res.status(400).json({
             error: 'Error in getting notification!'

@@ -5,12 +5,14 @@ const controller = require('../controller/officer');
 
 router.get('/', controller.get_all_officer);
 
-router.post('/create', controller.create);
+router.get('/intern/:id', controller.get_all_interns_for_officer);
 
-router.put('/add/:id', controller.update);
+router.put('/update/:id', controller.update_officer_details);
 
-router.delete('/remove/:id', controller.delete_a_specific_intern);
+router.post('/create', controller.make_new_officer);
 
-router.delete('/delete/:id', controller.delete_an_officer);
+router.post('/add/:id', controller.make_new_intern_and_assign_officer);
+
+router.delete('/inactive/:id', controller.make_officer_inactive);
 
 module.exports = router;

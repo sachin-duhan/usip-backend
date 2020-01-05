@@ -1,8 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-/// validation
-
 const internSchema = new Schema({
     pInfo: {
         type: Schema.Types.ObjectId,
@@ -37,7 +35,6 @@ const internSchema = new Schema({
     repOfficer: {
         type: Schema.Types.ObjectId,
         ref: 'Officer',
-        default: null,
         required: true
     },
     date: {

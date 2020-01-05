@@ -1,0 +1,73 @@
+<---------------------------------------------------------------------------->
+ ?????????????????????????????? BACKEND CHANGES ???????????????????????????
+<---------------------------------------------------------------------------->
+
+!============================================================================
+    Officer
+!============================================================================
+make intern officer assignment update options!
+
+
+!============================================================================
+    Login 
+!============================================================================
+check login functionalities and authentication.
+make active inactive option so as to ensure that all ex-intern must not have assess to the Dashboard
+
+
+!============================================================================
+    Notification
+!============================================================================
+make a file upload using AWS S3 in the notification
+make an active and inactive method
+
+
+!============================================================================
+    Future goals!
+!============================================================================
+allow officer to set intern request!
+allow officer to submit complaints or feedback against the intern
+
+
+!============================================================================
+    Global 
+!============================================================================
+active inactive method for all collections - notification, officer, intern, 
+move the multer report upload method to the AWS S3
+allow time-based or intern period based fetch of the data and not the complete data!
+
+-> Advance Functionalities
+    1.  implementation of the Email
+    2.  implementation of the algo for the interview schedule
+    3.  ensure excel download of the data
+
+
+<---------------------------------------------------------------------------->
+?????????????????????????????? FRONTEND CHANGES ???????????????????????????
+<---------------------------------------------------------------------------->
+
+All backend chanes may require correspoding FRONTEND changes too!!
+
+============================================================================
+    ADMIN
+============================================================================
+Make the fetch details correspoding to intern-period based
+updating and fixing various existing code bugs!
+
+
+============================================================================
+    INTERN
+============================================================================
+Tasks UI and its implementation!
+public and private notification table or check on count of number of notifications being shown on the UI
+
+
+============================================================================
+    COMMON
+============================================================================
+Auth guard and role guard files are same! kindly check
+Make a new officer dashboard with following functionalities:
+    1.  report upload
+    2.  Task assignment to intern
+    3.  Feedback
+    4.  Update profile details

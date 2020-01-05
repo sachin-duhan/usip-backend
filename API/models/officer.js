@@ -1,30 +1,29 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const intern = new Schema({
-    name:{type:String}
-});
-
 const officerSchema = new Schema({
-    name:{
-        type:String,
-        required:true
+    name: {
+        type: String,
+        required: true
     },
-    phone:{
-        type:Number,
-        required:true,
-        unique:true
+    phone: {
+        type: Number,
+        required: true,
+        unique: true
     },
-    email:{
-        type:String,
-        required:true,
-        unique:true
+    email: {
+        type: String,
+        required: true,
+        unique: true
     },
-    deptt:{
-        type:String,
-        required:true
+    deptt: {
+        type: String,
+        required: true
     },
-    interns:[intern]
+    active: {
+        type: Boolean,
+        default: true
+    }
 });
 
-module.exports = mongoose.model('Officer',officerSchema);
+module.exports = mongoose.model('Officer', officerSchema);
