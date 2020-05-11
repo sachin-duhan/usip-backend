@@ -20,10 +20,14 @@ const loginCredSchema = new Schema({
         default: false // this means that the user have the limited access.
     },
     role: {
+        type: String,
         default: 'intern',
-        type:String,
         required: true,
         enum: ['intern', 'admin']
+    },
+    isDeleted: {
+        type: Boolean,
+        default: false
     }
 });
 

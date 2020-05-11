@@ -60,7 +60,7 @@ exports.get_all_bank = (req, res) => {
 
 exports.get_all_application = (req, res) => {
     Status.find({
-        title: 'Allow application'
+        title: 'Allow USIP intern application'
     }).sort({
         Start: 'desc'
     }).then(result => {
@@ -118,7 +118,7 @@ exports.get_bank_status = (req, res) => {
 
 exports.allow_application = (req, res) => {
     Status.find({
-        title: 'Allow application',
+        title: 'Allow USIP intern application',
         isOpen: true
     }).then(result => {
         if (result.length > 0) {
@@ -133,7 +133,7 @@ exports.allow_application = (req, res) => {
                 });
             } else {
                 const newApplication = new Status({
-                    title: 'Allow application',
+                    title: 'Allow USIP intern application',
                     end: req.body.end,
                     details: req.body.details,
                     isOpen: true
@@ -155,7 +155,7 @@ exports.allow_application = (req, res) => {
 
 exports.close_application = (req, res) => {
     Status.updateMany({
-        title: 'Allow application',
+        title: 'Allow USIP intern application',
         isOpen: true,
     }, {
         $set: {
@@ -176,7 +176,7 @@ exports.close_application = (req, res) => {
 
 exports.get_application_status = (req, res) => {
     Status.find({
-        title: 'Allow application',
+        title: 'Allow USIP intern application',
         isOpen: true
     }).then(result => {
         if (result.length > 0) {
@@ -197,7 +197,7 @@ exports.get_application_status = (req, res) => {
 
 exports.get_current_application_title = (req, res, next) => {
     Status.find({
-        title: 'Allow application'
+        title: 'Allow USIP intern application'
     }).sort({
         Start: 'desc'
     }).then(result => {

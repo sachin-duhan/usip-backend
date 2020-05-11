@@ -40,7 +40,7 @@ const registerSchema = new Schema({
     phone: {
         type: Number,
         // required: true,
-        unique: true,
+        unique: [true, "phone number must be unique"],
         minlength: 10
     },
     domain: {
@@ -51,26 +51,7 @@ const registerSchema = new Schema({
         // required: true,
         default: false
     },
-    exp: {
-        type: String,
-        // required: true
-    },
-    interview: {
-        type: Boolean,
-        default: false
-    },
-    interview_attendence: {
-        type: Boolean,
-        default: false
-    },
-    interview_marks: {
-        type: Number,
-        default: 0
-    },
-    interview_comment: {
-        type: String,
-        default: 'none'
-    }
+    exp: String // details of experience that applicant thinks he have!!
 });
 
 module.exports = mongoose.model('Register', registerSchema);

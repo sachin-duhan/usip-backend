@@ -1,65 +1,70 @@
-const express = require('express');
-const cors = require('cors');
-const app = express();
-const path = require('path');
-const bodyParser = require('body-parser');
+const express = require('express'),
+    cors = require('cors'),
+    app = express(),
+    path = require('path'),
+    bodyParser = require('body-parser'),
+    helmet = require('helmet'),
+    morgan = require('morgan'),
+    fs = require('fs');
 
 // setting up the middle ware
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
 
 app.use('/public/uploads', express.static(path.join(__dirname, 'uploads')));
 
+app.use(helmet());
+
+// create a write stream (in append mode)
+var accessLogStream = fs.createWriteStream(path.join(__dirname, 'Logs/access.log'), {
+    flags: 'a'
+});
+
+// setup the logger
+app.use(morgan(require('./config/keys').morgan_logging_string, {
+    stream: accessLogStream
+}))
+
 // CORS error : 
 app.use(cors());
-app.use((req,res,next)=>{
-    res.header('Access-Control-Allow-Origin','*');
-    res.header('Access-Control-Allow-Headers','Origin,X-Requested-With,Content-Type,Accept,Authorization');
-    if(req.method === 'OPTIONS'){
-        res.header('Access-Control-Allow-Methods','PUT,POST,GET,PATCH,DELETE');
+app.options('*', cors());
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*'); // * can be replaced with specific URL too...
+    res.header('Access-Control-Allow-Headers', 'Origin,X-Requested-With,Content-Type,Accept,Authorization');
+    if (req.method === 'OPTIONS') {
+        res.header('Access-Control-Allow-Methods', 'PUT,POST,GET,PATCH,DELETE');
         res.status(200).json({});
     }
     next();
 });
 
-//loading routes
-const login = require('./API/routes/login');
-const register = require('./API/routes/register');
-const intern = require('./API/routes/intern');
-const officer = require('./API/routes/officer');
-const report = require('./API/routes/report');
-const notification = require('./API/routes/notification');
-const allow = require('./API/routes/open-close');
-const domain = require('./API/routes/domain');
-const bug = require('./API/routes/bug');
-const task = require('./API/routes/tasks');
-const file = require('./API/routes/file');
-
 // routing
-app.use('/user',login); // handling the Admin and intern login
-app.use('/register',register); // handling the application forms of the new inetrns
-app.use('/report',report); // handling the reports submission router for the intern
-app.use('/intern',intern); // handling the details and reports and bank details
-app.use('/officer',officer); // handling the deptt and report work
-app.use('/notification',notification); // notification handling 
-app.use('/allow',allow); // application and bank details
-app.use('/domain',domain); // for the domains of usip
-app.use('/bug',bug);
-app.use('/tasks',task);
-app.use('/public',file);
+app.use('/user', require('./API/routes/login')); // handling the Admin and intern login
+app.use('/register', require('./API/routes/register')); // handling the application forms of the new inetrns
+app.use('/report', require('./API/routes/report')); // handling the reports submission router for the intern
+app.use('/intern', require('./API/routes/intern')); // handling the details and reports and bank details
+app.use('/officer', require('./API/routes/officer')); // handling the deptt and report work
+app.use('/notification', require('./API/routes/notification')); // notification handling 
+app.use('/allow', require('./API/routes/open-close')); // application and bank details
+app.use('/domain', require('./API/routes/domain')); // for the domains of usip
+app.use('/bug', require('./API/routes/bug')); // handling bugs registeration and proposals!
+app.use('/tasks', require('./API/routes/tasks')); // officer adding tasks for interns!
+app.use('/public', require('./API/routes/file'));
 
 // error handling
-app.use((req,res,next)=>{
+app.use((req, res, next) => {
     const error = new Error('Invalid Request');
     res.status = 404;
     next(error);
 });
 
-app.use((error,req,res,next)=>{
+app.use((error, req, res, next) => {
     res.status = error.status || 500;
     res.json({
-        error:{
-            message:error.message
+        error: {
+            message: error.message
         }
     });
 });

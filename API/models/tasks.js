@@ -1,21 +1,36 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-// model for notification : 
 const taskSchema = new Schema({
-	title:{
-		type:String,
-		required:true
-	},
-	pInfo:{
+    title: {
+        // officers may add tasks via portal only!!
+        type: String,
+        required: true
+    },
+    created_by: {
+        type: Schema.Types.ObjectId,
+        required: true,
+        ref: 'Officer'
+    },
+    pInfo: {
         type: Schema.Types.ObjectId,
         required: true,
         ref: 'Intern'
     },
-	date:{
-		type:Date,
-		default:Date.now
-	}
+    is_completed: {
+        type: Boolean,
+        default: false
+    },
+    visible_to_intern: {
+        // this can be used for internal feedback system, that officer may
+        type: Boolean,
+        default: true
+    },
+    date: {
+        // date of creation
+        type: Date,
+        default: Date.now
+    }
 });
 
-module.exports = mongoose.model('Tasks',taskSchema);
+module.exports = mongoose.model('Tasks', taskSchema);
