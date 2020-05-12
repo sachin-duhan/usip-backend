@@ -1,219 +1,121 @@
-const Status = require('../models/open-close');
-const help = require('../helpers/title');
+const Status = require('../models/open-close'),
+    response_handler = require('../helpers/response_handler').send_formatted_reponse_handler;
+
+const bank_title = "Allow bank details",
+    application_title = "Allow USIP intern application";
 
 exports.allow_bank = (req, res) => {
     Status.find({
-        title: 'Allow bank details',
+        title: bank_title,
         isOpen: true
     }).then(result => {
-        if (result.length > 0) {
-            res.json({
-                message: 'Application already open'
-            });
-        } else {
-            const date = new Date();
-            if (date > req.body.end) {
-                res.status(400).json({
-                    message: 'End time has to be later'
-                })
-            } else {
-                const newApplication = new Status({
-                    title: 'Allow bank details',
-                    details: req.application_title, // set using the middleware function!
-                    end: req.body.end,
-                    isOpen: true
-                });
-                newApplication.save().then(result => {
-                    res.json({
-                        message: 'bank application allowed',
-                        status: result
-                    });
-                }).catch(err => {
-                    res.json({
-                        error: err
-                    });
-                })
-            }
-        }
-    }).catch(err => {
-        res.status(400).json({
-            error: err
-        });
-    })
+        if (result.length > 0)
+            return res.status(400).json(response_handler({}, false, "Application already open"));
+        const date = new Date();
+        if (date > req.body.end)
+            return res.status(400).json(response_handler({}, false, "End time has to be later"));
+        req.body.title = bank_title;
+        const newApplication = new Status(req.body);
+        newApplication.save().then(result => res.status(200).json(response_handler(result, true, undefined, { status: true })))
+            .catch(err => res.status(400).json(response_handler(err, false)));
+    }).catch(err => res.status(400).json(response_handler(err, false)));
 }
 
 exports.get_all_bank = (req, res) => {
-    Status.find({
-        title: 'Allow bank details'
-    }).sort({
-        Start: 'desc'
-    }).then(result => {
-        return res.status(200).json({
-            bank: result
-        });
-    }).catch(err => {
-        res.status(400).json({
-            error: err
-        });
-    })
+    Status.find({ title: bank_title })
+        .sort({ start: 'desc' })
+        .then(result => res.status(200).json(response_handler({}, true, undefined, { bank: result })))
+        .catch(err => res.status(400).json(response_handler(err, false)));
 }
 
 exports.get_all_application = (req, res) => {
-    Status.find({
-        title: 'Allow USIP intern application'
-    }).sort({
-        Start: 'desc'
+    Status.find({ title: application_title }).sort({
+        start: 'desc'
     }).then(result => {
         return res.status(200).json({
             application: result
         });
-    }).catch(err => {
-        res.status(400).json({
-            error: err
-        });
-    })
+    }).catch(err => res.status(400).json(response_handler(err, false)))
 }
 
 exports.close_bank = (req, res) => {
     Status.updateMany({
-        title: 'Allow bank details',
+        title: bank_title,
         isOpen: true,
     }, {
         $set: {
             isOpen: false
         }
     }, (err) => {
-        if (err) {
-            res.status(400).json({
-                error: err
-            });
-        } else {
-            res.status(200).json({
-                message: 'bank applications closed'
-            });
-        }
+        if (err)
+            return res.status(400).json(response_handler(err, false))
+        return res.status(200).json(response_handler({}, true, "bank applications closed"));
     });
 }
 
 exports.get_bank_status = (req, res) => {
     Status.find({
-        title: 'Allow bank details',
+        title: bank_title,
         isOpen: true
     }).then(result => {
-        if (result.length > 0) {
-            res.status(200).json({
-                status: true
-            })
-        } else {
-            res.status(200).json({
-                status: false
-            });
-        }
-    }).catch(err => {
-        res.status(400).json({
-            error: err
-        })
-    })
+        if (result.length > 0)
+            return res.status(200).json(response_handler({}, true, undefined, { status: true }))
+        return res.status(200).json(response_handler({}, true, undefined, { status: false }));
+    }).catch(err => res.status(400).json(response_handler(err, false)));
 }
 
 exports.allow_application = (req, res) => {
     Status.find({
-        title: 'Allow USIP intern application',
+        title: application_title,
         isOpen: true
     }).then(result => {
-        if (result.length > 0) {
-            res.json({
-                message: 'Application already open'
-            });
-        } else {
-            const date = new Date();
-            if (date > req.body.end) {
-                res.json({
-                    message: 'End time has to be later'
-                });
-            } else {
-                const newApplication = new Status({
-                    title: 'Allow USIP intern application',
-                    end: req.body.end,
-                    details: req.body.details,
-                    isOpen: true
-                });
-                newApplication.save().then(result => {
-                    res.json({
-                        message: 'application opened!',
-                        status: result
-                    });
-                });
-            }
-        }
-    }).catch(err => {
-        res.json({
-            error: err
-        });
-    })
+        if (result.length > 0)
+            return res.json(response_handler(result, false, "Application already open"));
+        const date = new Date();
+        if (date > req.body.end)
+            return res.json(response_handler({}, false, "End time has to be later than start date"));
+        req.body.title = application_title;
+        const newApplication = new Status(req.body);
+        newApplication.save().then(result => {
+            res.json(response_handler(result, true, "Application saved and opened successfully", { status: result }));
+        }).catch(err => res.status(400).json(response_handler(err, false)));
+    }).catch(err => res.status(400).json(response_handler(err, false)));
 }
 
 exports.close_application = (req, res) => {
     Status.updateMany({
-        title: 'Allow USIP intern application',
+        title: application_title,
         isOpen: true,
     }, {
         $set: {
             isOpen: false
         }
     }, (err) => {
-        if (err) {
-            res.json({
-                status: result
-            });
-        } else {
-            res.json({
-                message: 'Aapplications closed'
-            });
-        }
+        if (err)
+            return res.status(400).json(response_handler(err, false))
+        return res.json(response_handler({}, true, "Applications closed successfully"));
     });
 }
 
 exports.get_application_status = (req, res) => {
     Status.find({
-        title: 'Allow USIP intern application',
+        title: application_title,
         isOpen: true
     }).then(result => {
-        if (result.length > 0) {
-            res.status(200).json({
-                status: true
-            })
-        } else {
-            res.status(200).json({
-                status: false
-            });
-        }
-    }).catch(err => {
-        res.status(400).json({
-            error: err
-        })
-    })
+        if (result.length > 0)
+            return res.status(200).json(response_handler({}, true, undefined, { status: true }))
+        return res.status(200).json(response_handler({}, true, undefined, { status: false }));
+    }).catch(err => res.status(400).json(response_handler(err, false)))
 }
 
 exports.get_current_application_title = (req, res, next) => {
     Status.find({
-        title: 'Allow USIP intern application'
+        title: application_title
     }).sort({
-        Start: 'desc'
+        start: 'desc'
     }).then(result => {
-        if (result.length > 0) {
-            return res.status(200).json({
-                title: result[0].details
-            });
-        } else {
-            return res.status(404).json({
-                message: "no title found!"
-            })
-        }
-    }).catch(err => {
-        return res.status(400).json({
-            message: 'some error happened!',
-            error: err
-        });
-    });
+        if (result.length > 0)
+            return res.status(200).json(response_handler(result, true, undefined, { title: result[0].details }));
+        return res.status(404).json(response_handler(result, false, "No Records in DB", { title: null }));
+    }).catch(err => res.status(400).json(response_handler(err, false)));
 }

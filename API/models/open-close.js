@@ -38,7 +38,7 @@ const periodSchema = new Schema({
     isOpen: {
         type: Boolean,
         required: true,
-        default: false
+        default: true
     }
 });
 

@@ -19,32 +19,27 @@ const registerSchema = new Schema({
         type: String,
         default: 'Delhi Technological University'
     },
-    marks: {
-        type: Number,
-        // required: true
-    },
+    marks: Number,
     rollNo: {
         type: String,
-        // required: true,
         unique: [true, 'Roll number should be unique'],
-        maxlength: 13
     },
-    branch: {
-        type: String,
-        // required: true
-    },
+    branch: String,
     date: {
         type: Date,
         default: Date.now
     },
     phone: {
         type: Number,
-        // required: true,
         unique: [true, "phone number must be unique"],
         minlength: 10
     },
     domain: {
         type: [String]
+    },
+    isDeleted: {
+        type: Boolean,
+        default: false
     },
     isQualified: {
         type: Boolean,
@@ -52,5 +47,6 @@ const registerSchema = new Schema({
     },
     exp: String // details of experience that applicant thinks he have!!
 });
+
 
 module.exports = mongoose.model('Register', registerSchema);

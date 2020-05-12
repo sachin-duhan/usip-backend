@@ -47,3 +47,4 @@ Req IP = ::1 | Remote User = - | [Tue, 12 May 2020 08:03:37 GMT] | "OPTIONS /int
 Req IP = ::1 | Remote User = - | [Tue, 12 May 2020 08:03:37 GMT] | "GET /intern/register" | Status code = 200 | Content Length = 2300 | Response Time = 24.711 ms
 Req IP = ::1 | Remote User = - | [Tue, 12 May 2020 09:48:27 GMT] | "GET /bug" | Status code = 200 | Content Length = 1854 | Response Time = 30.488 ms
 Req IP = ::1 | Remote User = - | [Tue, 12 May 2020 09:50:21 GMT] | "GET /bug" | Status code = 200 | Content Length = 1842 | Response Time = 47.323 ms
+Req IP = ::1 | Remote User = - | [Tue, 12 May 2020 12:53:03 GMT] | "GET /allow/title" | Status code = 200 | Content Length = 80 | Response Time = 37.190 ms

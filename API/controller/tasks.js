@@ -1,82 +1,60 @@
-const Tasks = require('../models/tasks');
+const Tasks = require('../models/tasks'),
+    response_handler = require('../helpers/response_handler').send_formatted_reponse_handler;
 
 exports.get_all = (req, res) => {
     Tasks.find({}).populate('pInfo').then(result => {
-        res.status(200).json({
-            tasks: result
-        });
-    }).catch(err => {
-        res.status(400).json({
-            error: err
-        });
+        res.status(200).json(response_handler(result, true));
+    }).catch(err => res.status(400).json(response_handler(err, false)));
+}
+
+exports.mark_task_completed = (req, res) => {
+    Tasks.findOneAndUpdate({ _id: req.params.id }, {
+        $set: {
+            is_completed: req.body.is_completed,
+            visible_to_intern: req.body.visible_to_intern
+        }
+    }, (err, doc) => {
+        if (err) return res.status(400).json(response_handler(err, false, "Task cannot be updated"));
+        return res.status(200).json(response_handler(doc, true, "Task updated successfully"));
     });
 }
 
-exports.make_new = (req, res) => {
-    Tasks.find({
-        title: req.body.title
-    }).then(result => {
-        if (result.length == 0) {
-            task = new Tasks({
-                title: req.body.title,
-                pInfo: req.body.pInfo
-            });
-            task.save().then(result => {
-                res.status(200).json({
-                    message: 'Officer Created',
-                    task: result
-                });
-            }).catch(err => {
-                res.status(400).json({
-                    error: err
-                });
-            });
-        } else {
-            res.status(200).json({
-                message: 'task already found!'
-            });
-        }
-    }).catch(err => {
-        res.status(401).json({
-            error: err
-        })
-    })
+// req params must contain officer ID!
+exports.get_all_tasks_added_by_an_officer = (req, res) => {
+    res.status(200).json(response_handler(result, true));
+    Tasks.find({ created_by: req.params.id })
+        .then(task => res.status(200).json(response_handler(task, true)))
+        .catch(err => res.status(400).json(response_handler(err, false)));
 }
 
+// body should contain - created_by, title, pInfo, visible_to_intern
+exports.make_new = (req, res) => {
+    Tasks.find({ title: req.body.title })
+        .then(result => {
+            if (result.length > 0)
+                return res.status(200).json(res.status(400).json(response_handler({}, false, "Task already found!!")));
+            newTask = new Tasks(req.body);
+            newTask.save().then(result => {
+                res.status(200).json(response_handler(result, true));
+            }).catch(err => res.status(400).json(response_handler(err, false)));
+        }).catch(err => res.status(400).json(response_handler(err, false)));
+}
+
+// task id is required in Params
 exports.delete_task = (req, res) => {
     const id = req.params.id;
     Tasks.findOneAndDelete({
         _id: id
-    }, (err) => {
-        if (err) {
-            res.status(400).json({
-                error: err
-            });
-        } else {
-            res.status(200).json({
-                message: 'Tasks Deleted successfully'
-            });
-        }
+    }, (err, doc) => {
+        if (err) return res.status(400).json(response_handler(err, false, "Task cannot be deleted"));
+        return res.status(200).json(response_handler(doc, true, "Task deleted successfully"));
     });
 }
 
+// task ID must be in param!
 exports.get_specific = (req, res) => {
     const id = req.params.id;
-    Tasks.find({
-        pInfo: id
-    }).populate('pInfo').then(officer => {
-        if (officer) {
-            res.status(200).json({
-                tasks: officer
-            });
-        } else {
-            res.status(200).json({
-                message: 'No tasks added'
-            })
-        }
-    }).catch(err => {
-        res.status(400).json({
-            error: err
-        });
-    });
+    Tasks.find({ pInfo: id })
+        .populate('pInfo').then(task => res.status(200).json(response_handler(task, true)))
+        .catch(err => res.status(400).json(response_handler(err, false)));
 }

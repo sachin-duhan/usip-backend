@@ -20,6 +20,8 @@ router.get('/active/intern', helper.get_title, controller.get_current_active_int
 
 router.get('/register/:id', controller.get_specific_registered_interns);
 
-router.get('/:id', controller.get_specific_qualification);
+router.get('/officer/:id', controller.get_all_interns_for_an_officer);
+
+router.get('/:id', controller.get_specific_qualified_intern);
 
 module.exports = router;
