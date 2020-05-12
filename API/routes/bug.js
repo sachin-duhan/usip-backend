@@ -8,6 +8,8 @@ router.delete('/:id', controller.delete_a_bug_using_id);
 
 router.get('/:id', controller.get_specific_bug);
 
+router.put('/:id', controller.update_bug_or_mark_it_resolved);
+
 router.post('/', controller.make_new_bug);
 
 module.exports = router;

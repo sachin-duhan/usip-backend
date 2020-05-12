@@ -5,10 +5,7 @@ const domainSchema = new Schema({
     title: {
         type: String,
         required: true,
-    },
-    isDeleted: {
-        type: Boolean,
-        default: false
+        unique: [true, 'Domain should be unique']
     }
 });
 module.exports = mongoose.model('Domain', domainSchema);

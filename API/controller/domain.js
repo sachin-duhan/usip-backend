@@ -1,65 +1,33 @@
 const Domain = require('../models/domain');
+const response_handler = require('../helpers/response_handler').send_formatted_reponse_handler;
 
 exports.get_all_domains = (req, res) => {
     Domain.find({}).then(result => {
-        if (result && result.length > 0) {
-            res.json({
-                domain: result
-            });
-        } else {
-            res.json({
-                message: 'No domain found!!'
-            })
-        }
+        return res.status(200).json(response_handler(result, true, undefined, { domain: result }));
     }).catch(err => {
-        res.json({
-            error: err
+        return res.json({
+            error: err,
+            domain: []
         });
     })
 }
 
-exports.delete = (req,res)=>{
+exports.delete = (req, res) => {
     const id = req.params.id
-    Domain.findOneAndDelete({_id:id},(err)=>{
-        if(err){
-            res.status(400).json({
-            	message:'Domain cant be deleted',
-            	error:err
-            });
-        }else{
-            res.status(200).json({
-            	message:'Domain Deleted'
-            });
-        }
+    Domain.findOneAndDelete({ _id: id }, (err) => {
+        if (err)
+            return res.status(400).json(response_handler(err, false, "Domain is not deleted"));
+        return res.status(200).json(response_handler({}, true, 'Domain Deleted successfully'));
     });
 }
 
-exports.make_new_domain =  (req, res) => {
-    Domain.find({
-        title: req.body.title
-    }).then(result => {
-        if (result && result.length > 0) {
-            res.json({
-                message: 'Domain already found'
-            });
-        } else {
-                const newDomain = new Domain({
-                    title: req.body.title
-                });
-                newDomain.save().then(result => {
-                    res.status(200).json({
-                    	message:'Domain added!',
-                        status: result
-                    });
-                }).catch(err=>{
-                	res.status(400).json({
-                		error:err
-                	});
-                });
-        }
-    }).catch(err => {
-        res.status(400).json({
-            error: err
-        });
-    })
+exports.make_new_domain = (req, res) => {
+    Domain.find({ title: req.body.title }).then(result => {
+        if (result.length > 0)
+            return res.status(400).json(response_handler(result, false, "Domain already found"));
+        const newDomain = new Domain(req.body);
+        newDomain.save().then(result => {
+            return res.status(200).json(response_handler(result, true, "Domain added successfully", { status: result }));
+        }).catch(err => res.status(400).json(response_handler(err, false)));
+    }).catch(err => res.status(400).json(response_handler(err, false)));
 }

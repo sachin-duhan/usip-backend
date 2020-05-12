@@ -46,9 +46,8 @@ const registerSchema = new Schema({
     domain: {
         type: [String]
     },
-    isSelected: {
+    isQualified: {
         type: Boolean,
-        // required: true,
         default: false
     },
     exp: String // details of experience that applicant thinks he have!!

@@ -8,6 +8,8 @@ const interviewSchema = new Schema({
         ref: 'Register'
     },
     interview: {
+        // true = interview has beed conducted!    
+        // this means that interview is conducted by authorities!!
         type: Boolean,
         default: false
     },
@@ -23,7 +25,10 @@ const interviewSchema = new Schema({
         type: String,
         default: 'none'
     },
-    interview_date: Date,
+    interview_date: {
+        type: Date,
+        required: [true, 'kindly provied an Interview date']
+    },
     slot_details: String, // interview are conducted in slot and details can be writter here!!
     isDeleted: {
         type: Boolean,

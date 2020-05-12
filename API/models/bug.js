@@ -15,10 +15,6 @@ const bugSchema = new Schema({
         ref: 'Intern',
         required: true
     },
-    date: {
-        type: Date,
-        default: Date.now
-    },
     isDeleted: {
         type: Boolean,
         default: false
@@ -27,6 +23,8 @@ const bugSchema = new Schema({
         type: Boolean,
         default: false
     }
+}, {
+    timestamps: true
 });
 
 module.exports = mongoose.model('Bugs', bugSchema);

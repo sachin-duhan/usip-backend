@@ -7,6 +7,7 @@ const notificationSchema = new Schema({
         type: String,
         required: true
     },
+    description: { type: String, require: false },
     fileLocation: {
         type: String,
         default: null
