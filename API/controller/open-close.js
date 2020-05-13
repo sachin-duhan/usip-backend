@@ -1,8 +1,8 @@
 const Status = require('../models/open-close'),
     response_handler = require('../helpers/response_handler').send_formatted_reponse_handler;
 
-const bank_title = "Allow bank details",
-    application_title = "Allow USIP intern application";
+const bank_title = require('../../config/keys').bank_title_for_DB,
+    application_title = require('../../config/keys').application_title_for_DB;
 
 exports.allow_bank = (req, res) => {
     Status.find({
@@ -53,14 +53,14 @@ exports.close_bank = (req, res) => {
     });
 }
 
-exports.get_bank_status = (req, res) => {
+exports.get_bank_status = (req, res, next) => {
     Status.find({
         title: bank_title,
         isOpen: true
     }).then(result => {
-        if (result.length > 0)
-            return res.status(200).json(response_handler({}, true, undefined, { status: true }))
-        return res.status(200).json(response_handler({}, true, undefined, { status: false }));
+        if (result.length > 0) req.is_bank_details_allowed = true;
+        else req.is_bank_details_allowed = false;
+        next();
     }).catch(err => res.status(400).json(response_handler(err, false)));
 }
 
@@ -97,14 +97,14 @@ exports.close_application = (req, res) => {
     });
 }
 
-exports.get_application_status = (req, res) => {
+exports.get_application_status = (req, res, next) => {
     Status.find({
         title: application_title,
         isOpen: true
     }).then(result => {
-        if (result.length > 0)
-            return res.status(200).json(response_handler({}, true, undefined, { status: true }))
-        return res.status(200).json(response_handler({}, true, undefined, { status: false }));
+        if (result.length > 0) req.is_application_open = true;
+        else req.is_application_open = false;
+        next();
     }).catch(err => res.status(400).json(response_handler(err, false)))
 }
 

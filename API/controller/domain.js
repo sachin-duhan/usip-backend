@@ -5,10 +5,7 @@ exports.get_all_domains = (req, res) => {
     Domain.find({}).then(result => {
         return res.status(200).json(response_handler(result, true, undefined, { domain: result }));
     }).catch(err => {
-        return res.json({
-            error: err,
-            domain: []
-        });
+        return res.json(response_handler(err, false, undefined, { domain: [] }));
     })
 }
 

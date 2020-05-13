@@ -15,11 +15,12 @@ there are two kind of application that can be controlled via this schema
 -> make sure that You never Delete any entry in this collection!!
 */
 
+
 const periodSchema = new Schema({
     title: { // marks the kind of application we have!!
+        // they will have predefined values, refer controller to check their values!!
         type: String,
-        required: true,
-        enum: ['Allow USIP intern application', 'Allow bank details']
+        required: true
     },
     details: {
         /* description of the application! we can maintain a brief objective or statement 

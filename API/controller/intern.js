@@ -3,13 +3,14 @@ const Register = require('../models/register');
 
 const response_handler = require('../helpers/response_handler').send_formatted_reponse_handler;
 
+// making a new intern and assigning of new intern takes place in the officer controller
+// i donn know why!!
+
 exports.get_all_qualified = (req, res) => {
     Register.find({
         isQualified: true
     }).populate('application_title').then(result => {
-        return res.status(200).json({
-            interns: result
-        });
+        return res.status(200).json(response_handler(result, true));
     }).catch(err => res.status(400).json(response_handler(err, false)));
 }
 
@@ -26,9 +27,7 @@ exports.get_specific_qualified_intern = (req, res) => {
         isQualified: true,
         _id: id
     }).populate('application_title').then(result => {
-        return res.status(200).json({
-            intern: result
-        });
+        return res.status(200).json(response_handler(result, true));
     }).catch(err => res.status(400).json(response_handler(err, false)))
 }
 
@@ -63,7 +62,7 @@ exports.get_specific_registered_interns = (req, res) => {
                 path: 'application_title'
             }
         }).populate('repOfficer')
-        .then(intern => res.status(200).json({}, false, "", { intern: intern }))
+        .then(intern => res.status(200).json(intern, false, "", { intern: intern }))
         .catch(err => res.status(400).json(response_handler(err, false)));
 }
 

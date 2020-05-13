@@ -2,9 +2,7 @@ const Bug = require('../models/bug');
 const response_handler = require('../helpers/response_handler').send_formatted_reponse_handler;
 
 exports.get_all_bugs = (req, res) => {
-    Bug.find({}).sort({
-        date: -1
-    }).populate('pInfo').then(result => {
+    Bug.find({}).populate('pInfo').then(result => {
         return res.status(200).json(response_handler(result, true));
     }).catch(err => {
         return res.status(400).json(response_handler(err, false));
@@ -51,11 +49,7 @@ exports.make_new_bug = (req, res) => {
         if (result) {
             return res.status(404).json(response_handler(result, false, 'Bug is already Registered'));
         } else {
-            const newBug = new Bug({
-                title: req.body.title,
-                description: req.body.details,
-                pInfo: req.body.pInfo
-            });
+            const newBug = new Bug(req.body);
             newBug.save().then(result => res.status(200).json(response_handler(result, true, 'Thank you for helping us.')))
                 .catch(err => res.status(400).json(response_handler(err, false)));
         }
