@@ -7,6 +7,11 @@ const internSchema = new Schema({
         required: true,
         ref: 'Register'
     },
+    interview: {
+        type: Schema.Types.ObjectId,
+        required: true,
+        ref: 'Interview'
+    },
     depNo: {
         type: Number,
         required: true,

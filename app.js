@@ -52,6 +52,7 @@ app.use('/domain', require('./API/routes/domain')); // for the domains of usip
 app.use('/bug', require('./API/routes/bug')); // handling bugs registeration and proposals!
 app.use('/tasks', require('./API/routes/tasks')); // officer adding tasks for interns!
 app.use('/public', require('./API/routes/file'));
+app.use('/interview',require('./API/routes/interview'));
 
 // error handling
 app.use((req, res, next) => {

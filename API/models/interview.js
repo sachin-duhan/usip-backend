@@ -9,7 +9,7 @@ const interviewSchema = new Schema({
     },
     interview: {
         // true = interview has beed conducted!    
-        // this means that interview is conducted by authorities!!
+        // this means that interview is conducted by authorities in the given slot!!
         type: Boolean,
         default: false
     },
@@ -37,4 +37,4 @@ const interviewSchema = new Schema({
     }
 });
 
-module.exports = mongoose.model('Intern', interviewSchema);
+module.exports = mongoose.model('Interview', interviewSchema);
