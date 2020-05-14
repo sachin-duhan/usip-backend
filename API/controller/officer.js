@@ -6,7 +6,7 @@ exports.get_all_officer = (req, res) => {
     Officer.find({
         active: true
     }).then(officer => {
-        return res.status(200).json(response_handler({}, true, undefined, { officers: officer }));
+        return res.status(200).json(response_handler(officer, true, undefined));
     }).catch(err => res.status(400).json(response_handler(err, false)));
 }
 
@@ -46,7 +46,7 @@ exports.make_new_officer = (req, res) => {
         else {
             newOfficer = new Officer(req.body);
             newOfficer.save().then(result => {
-                res.status(200).json(response_handler({}, true, undefined, { officer: result }));
+                res.status(200).json(response_handler(result, true, undefined));
             }).catch(err => res.status(400).json(response_handler(err, false)));
         }
     }).catch(err => res.status(400).json(response_handler(err, false)))

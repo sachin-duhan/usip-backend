@@ -30,11 +30,8 @@ exports.get_current_active_applications = (req, res) => {
     Register.find({
         application_title: req.application_title_id,
         isDeleted: false
-    }).populate('application_title').then(doc => {
-        res.status(200).json({
-            application: doc
-        })
-    }).catch(err => res.status(400).json(response_handler(err, false)))
+    }).populate('application_title').then(doc => res.status(200).json(response_handler(doc, true)))
+    .catch(err => res.status(400).json(response_handler(err, false)))
 }
 
 exports.qualify_an_intern = (req, res) => {
@@ -52,6 +49,20 @@ exports.qualify_an_intern = (req, res) => {
     });
 }
 
+exports.disqualify_an_intern = (req, res) => {
+    const id = req.params.id;
+    Register.findOneAndUpdate({
+        _id: id,
+        isDeleted: false
+    }, {
+        $set: {
+            isQualified: false
+        }
+    }, (err, doc) => {
+        if (err) return res.status(400).json(response_handler(err, false))
+        else return res.status(200).json(response_handler(doc, true, "Interns updated successfully"));
+    });
+}
 exports.qualify_intern_in_bulk = (req, res) => {
     if (!req.body.interns || req.body.interns.length == 0) return res.status(400).json(response_handler({}, false, "You must select atleast one application."));
     Register.updateMany({
@@ -100,7 +111,7 @@ exports.delete = (req, res) => {
 
 // params must contain application_title_ID!!
 exports.get_all_qualified_students = (req, res) => {
-    const period_id = req.params.id;
+    // const period_id = req.params.id;
     Register.find({
             // application_title: period_id,
             isQualified: true

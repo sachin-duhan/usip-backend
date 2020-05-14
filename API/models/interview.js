@@ -29,6 +29,7 @@ const interviewSchema = new Schema({
         type: Date,
         required: [true, 'kindly provied an Interview date']
     },
+    venue_details:String,
     slot_details: String, // interview are conducted in slot and details can be writter here!!
     isDeleted: {
         type: Boolean,

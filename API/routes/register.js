@@ -11,7 +11,7 @@ router.get('/', controller.get_all_resgiterations);
 
 router.get('/current', helper.get_title, controller.get_current_active_applications);
 
-router.get('/qualified/:id', controller.get_all_qualified_students);
+router.get('/qualified', controller.get_all_qualified_students);
 
 router.get('/:id', controller.get_specific_regsiter);
 
@@ -20,6 +20,8 @@ router.post('/', Period.get_application_status, helper.get_title, controller.mak
 router.put('/qualify/bulk', controller.qualify_intern_in_bulk);
 
 router.put('/qualify/single/:id', controller.qualify_an_intern);
+
+router.put('/disqualify/:id', controller.disqualify_an_intern);
 
 router.delete('/:id', controller.delete);
 
