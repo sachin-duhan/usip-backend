@@ -12,6 +12,20 @@ exports.get_all_interview_list = (req, res) => {
     }).catch(err => res.status(400).json(response_handler(err, false)));
 }
 
+exports.get_query_based_interview_list = (req, res) => {
+    let marks = req.params.marks ? parseInt(req.params.marks) : 65;
+    Interview.find({
+        interview_marks : { $gte : marks }
+    }).populate({
+        path: 'pInfo',
+        populate: {
+            path: 'application_title'
+        }
+    }).then(result => {
+        return res.status(200).json(response_handler(result, true));
+    }).catch(err => res.status(400).json(response_handler(err, false)));
+}
+
 exports.get_all_upcoming_interview = (req, res) => {
     Interview.find({
             interview_date: { $gte: Date.now() }
