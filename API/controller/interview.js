@@ -57,14 +57,17 @@ exports.bulk_Interview_saving = (req, res) => {
         if (err)
             return res.status(304).json(response_handler(err, false, "Interview is not added"));
         return res.status(200).json(response_handler(doc, true, "Interview added successfully.."));
+ code
     });
 }
 
 exports.bulk_Interview_updating = (req, res) => {
-    console.log(req.body.interns);
+    // console.log(req.body.interns);
     Interview.updateMany({
-        pInfo: { $in: req.body.interns },
-        interview_date: { $gte: Date.now() }
+        pInfo: {
+            $in: req.body.interns
+        },
+        isDeleted:false
     }, {
         $set: {
             interview_date: req.body.interview_date,
@@ -91,12 +94,12 @@ exports.update = (req, res) => {
             interview_comment: body.interview_comment,
             interview_date: body.interview_date,
             slot_details: body.slot_details,
-            venue_details: req.body.venue_details
+            venue_details: body.venue_details
         }
     }, (err, doc) => {
         if (err)
             return res.status(304).json(response_handler(err, false, "Applicant is not updated"));
-        return res.status(200).json(response_handler(doc, true, "Interview updated successfully.."));
+        return res.status(200).json(response_handler(doc, true, "Application status updated successfully.."));
     });
 }
 

@@ -2,7 +2,7 @@ const Tasks = require('../models/tasks'),
     response_handler = require('../helpers/response_handler').send_formatted_reponse_handler;
 
 exports.get_all = (req, res) => {
-    Tasks.find({}).populate('pInfo').then(result => {
+    Tasks.find({}).populate('pInfo').populate('created_by').then(result => {
         res.status(200).json(response_handler(result, true));
     }).catch(err => res.status(400).json(response_handler(err, false)));
 }
@@ -23,6 +23,7 @@ exports.mark_task_completed = (req, res) => {
 exports.get_all_tasks_added_by_an_officer = (req, res) => {
     res.status(200).json(response_handler(result, true));
     Tasks.find({ created_by: req.params.id })
+        .populate('pInfo').populate('created_by')
         .then(task => res.status(200).json(response_handler(task, true)))
         .catch(err => res.status(400).json(response_handler(err, false)));
 }
@@ -55,6 +56,7 @@ exports.delete_task = (req, res) => {
 exports.get_specific = (req, res) => {
     const id = req.params.id;
     Tasks.find({ pInfo: id })
-        .populate('pInfo').then(task => res.status(200).json(response_handler(task, true)))
+        .populate('pInfo').populate('created_by')
+        .then(task => res.status(200).json(response_handler(task, true)))
         .catch(err => res.status(400).json(response_handler(err, false)));
 }
