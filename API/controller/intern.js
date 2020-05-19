@@ -77,8 +77,6 @@ exports.make_new = (req, res) => {
     }).populate('repOfficer').then(intern => {
         if (intern)
             return res.status(406).json(response_handler(intern, false, "Deployment No. is already resgistered"));
-        req.body.pInfo = req.body.id;
-        req.body.id = undefined;
         const newIntern = new Intern(req.body);
         newIntern.save().then(intern => res.status(200).json(response_handler(intern, true, "Intern saved successfully")))
             .catch((err) => res.status(400).json(response_handler(err, false)));

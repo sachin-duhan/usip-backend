@@ -18,14 +18,14 @@ app.use('/public/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(helmet());
 
 // create a write stream (in append mode)
-var accessLogStream = fs.createWriteStream(path.join(__dirname, 'Logs/access.log'), {
-    flags: 'a'
-});
+// var accessLogStream = fs.createWriteStream(path.join(__dirname, 'Logs/access.log'), {
+//     flags: 'a'
+// });
 
-// setup the logger
-app.use(morgan(require('./config/keys').morgan_logging_string, {
-    stream: accessLogStream
-}))
+// // setup the logger
+// app.use(morgan(require('./config/keys').morgan_logging_string, {
+//     stream: accessLogStream
+// }))
 
 // CORS error : 
 app.use(cors());

@@ -12,6 +12,11 @@ const internSchema = new Schema({
         required: true,
         ref: 'Interview'
     },
+    repOfficer: {
+        type: Schema.Types.ObjectId,
+        ref: 'Officer',
+        required: true
+    },
     depNo: {
         type: Number,
         required: true,
@@ -35,11 +40,6 @@ const internSchema = new Schema({
     },
     end: {
         type: Date,
-        required: true
-    },
-    repOfficer: {
-        type: Schema.Types.ObjectId,
-        ref: 'Officer',
         required: true
     },
     date: {
