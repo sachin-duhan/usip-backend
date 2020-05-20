@@ -104,8 +104,7 @@ exports.update_bank_details = (req, res) => {
         $set: {
             bankAc: req.body.bankAc,
             ifsc: req.body.ifsc,
-            bankName: req.body.bankName,
-            repOfficer: req.body.repOfficer
+            bankName: req.body.bankName
         }
     }, (err, doc) => {
         if (err)

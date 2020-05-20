@@ -32,7 +32,7 @@ exports.login_user = (req, res) => {
 }
 
 exports.get_all_users_with_access = (req, res) => {
-    User.find({}).populate('userDetails').then(user => {
+    User.find({}).then(user => {
         return res.status(200).json({
             count: user.length,
             intern: user

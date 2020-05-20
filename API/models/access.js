@@ -2,16 +2,15 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const loginCredSchema = new Schema({
-    userDetails: {
-        type: Schema.Types.ObjectId,
-        ref: 'Intern'
-    },
-    userName: {
+    userDetails: String,
+    userName: { 
+        // an email is used!
         type: String,
         require: true,
         unique: true
     },
     password: {
+        // hash
         type: String,
         require: true
     },
@@ -23,7 +22,7 @@ const loginCredSchema = new Schema({
         type: String,
         default: 'intern',
         required: true,
-        enum: ['intern', 'admin']
+        enum: ['intern', 'admin','officer']
     },
     isDeleted: {
         type: Boolean,

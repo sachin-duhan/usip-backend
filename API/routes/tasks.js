@@ -7,6 +7,8 @@ router.get('/', controller.get_all);
 
 router.get('/:id', controller.get_specific);
 
+router.get('/officer/:id',controller.get_all_tasks_added_by_an_officer);
+
 router.post('/create', controller.make_new);
 
 router.delete('/:id', controller.delete_task);
