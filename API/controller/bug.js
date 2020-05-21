@@ -2,7 +2,10 @@ const Bug = require('../models/bug');
 const response_handler = require('../helpers/response_handler').send_formatted_reponse_handler;
 
 exports.get_all_bugs = (req, res) => {
-    Bug.find({}).populate('pInfo').then(result => {
+    Bug.find({})
+    .populate({path:'pInfo',populate:{path:'pInfo'}})
+    .sort({updatedAt:-1})
+    .then(result => {
         return res.status(200).json(response_handler(result, true));
     }).catch(err => {
         return res.status(400).json(response_handler(err, false));
@@ -35,7 +38,7 @@ exports.update_bug_or_mark_it_resolved = (req, res) => {
     }, {
         $set: {
             title: req.body.title,
-            description: req.body.details,
+            description: req.body.description,
             isResolved: req.body.isResolved
         }
     }, (err, doc) => {
