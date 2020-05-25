@@ -29,27 +29,37 @@ exports.login_user = (req, res) => {
 }
 
 exports.get_all_users_with_access = (req, res) => {
-    User.find({}).then(user => {
-        return res.status(200).json({
-            count: user.length,
-            intern: user
-        });
-    }).catch(err => res.status(404).json(response_handler(err, false)))
+    User.find({
+        adminAccessGiven: false
+    })
+    .populate({
+        path:'userDetails',
+        populate:{
+            path: 'pInfo'
+        }
+    }).then(user => res.status(200).json(response_handler(user,true)))
+    .catch(err => res.status(404).json(response_handler(err, false)))
+}
+
+exports.get_all_admins = (req, res) => {
+    User.find({
+        adminAccessGiven: true
+    }).then(user => res.status(200).json(response_handler(user,true)))
+    .catch(err => res.status(404).json(response_handler(err, false)))
 }
 
 exports.make_new_user = (req, res) => {
     User.findOne({userDetails: req.body.userDetails})
     .then(user => {
-        if (user) return res.status(400).json(response_handler(user, false, 'User already have Login ID and password!!'));
+        if (user) return res.status(400).json(response_handler(user, false, 'Intern already have Login access'));
         bcrypt.genSalt(10, function(err, salt) {
             if (err) return res.status(400).json(response_handler(err, false));
             bcrypt.hash(req.body.password, salt, function(err, hash) {
-                if (err) return res.status(400).json(response_handler({}, false, 'Bad request! come back later!! hashing issue'));
-                const newUser = new User({
-                    userDetails: req.body.userDetails, // storing th ID of the intern-ID
-                    userName: req.body.userName,
-                    password: hash
-                });
+                if (err) return res.status(400).json(response_handler(err, false));
+                req.body.password = hash; 
+                // default password = "usip_intern"
+                // default userName = "email of the intern!"
+                const newUser = new User(req.body);
                 newUser.save().then(
                     result => res.status(201).json(response_handler(result,true,"Intern access updated successfully"))
                 ).catch(err => res.status(400).json(response_handler(err, false, 'Bad request! come back later!! saving issue')))
@@ -84,8 +94,7 @@ exports.update_password = (req, res) => {
 }
 
 exports.update_password_by_admin = (req, res) => {
-    const id = req.params.id;
-    User.findOne({ userDetails: id })
+    User.findOne({ _id: req.params.id })
     .then(user => {
         bcrypt.genSalt(10, function(err, salt) {
             if (err) return res.status(400).json(response_handler(err,false));

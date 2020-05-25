@@ -15,4 +15,6 @@ router.get('/:id', controller.get_specific_user);
 
 router.put('/password/:id', controller.update_password);
 
+router.put('/admin/password/:id', controller.update_password_by_admin);
+
 module.exports = router;

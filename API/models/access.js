@@ -2,7 +2,11 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const loginCredSchema = new Schema({
-    userDetails: String,
+    userDetails: {
+        type: Schema.Types.ObjectId,
+        required: true,
+        ref: 'Intern'
+    },
     userName: { 
         // an email is used!
         type: String,

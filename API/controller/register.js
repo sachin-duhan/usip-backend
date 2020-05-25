@@ -4,7 +4,7 @@ const Register = require('../models/register'),
 exports.get_all_resgiterations = (req, res) => {
     Register.find({
         isDeleted: false
-    }).populate('application_title').then(data => {
+    }).populate('application_title').sort({date:-1}).then(data => {
         res.status(200).json(response_handler(data, true));
     }).catch(err => res.status(400).json(response_handler(err, false)));
 }
