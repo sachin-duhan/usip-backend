@@ -15,16 +15,18 @@ exports.allow_bank = (req, res) => {
         if (date > req.body.end)
             return res.status(400).json(response_handler({}, false, "End time has to be later"));
         req.body.title = bank_title;
+        req.body.details = "Intern are allowed to fill in their bank details";   
         const newApplication = new Status(req.body);
-        newApplication.save().then(result => res.status(200).json(response_handler(result, true, undefined, { status: true })))
-            .catch(err => res.status(400).json(response_handler(err, false)));
+        newApplication.save()
+        .then(result => res.status(200).json(response_handler(result, true, undefined, { status: true })))
+        .catch(err => res.status(400).json(response_handler(err, false)));
     }).catch(err => res.status(400).json(response_handler(err, false)));
 }
 
 exports.get_all_bank = (req, res) => {
     Status.find({ title: bank_title })
         .sort({ start: 'desc' })
-        .then(result => res.status(200).json(response_handler({}, true, undefined, { bank: result })))
+        .then(result => res.status(200).json(response_handler(result, true, undefined)))
         .catch(err => res.status(400).json(response_handler(err, false)));
 }
 
@@ -32,10 +34,8 @@ exports.get_all_application = (req, res) => {
     Status.find({ title: application_title }).sort({
         start: 'desc'
     }).then(result => {
-        return res.status(200).json({
-            application: result
-        });
-    }).catch(err => res.status(400).json(response_handler(err, false)))
+        return res.status(200).json(response_handler(result,true));
+    }).catch(err => res.status(400).json(response_handler(err, false)));
 }
 
 exports.close_bank = (req, res) => {

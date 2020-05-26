@@ -19,7 +19,7 @@ router.get('/bank', controller.get_bank_status, (req, res) =>
         status: req.is_bank_details_allowed
     })));
 
-router.post('/bank', helper.get_title, controller.allow_bank);
+router.post('/bank', controller.allow_bank);
 
 router.put('/bank', controller.close_bank);
 

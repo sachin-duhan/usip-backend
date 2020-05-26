@@ -2,11 +2,9 @@ const Domain = require('../models/domain');
 const response_handler = require('../helpers/response_handler').send_formatted_reponse_handler;
 
 exports.get_all_domains = (req, res) => {
-    Domain.find({}).then(result => {
-        return res.status(200).json(response_handler(result, true, undefined, { domain: result }));
-    }).catch(err => {
-        return res.json(response_handler(err, false, undefined, { domain: [] }));
-    })
+    Domain.find({})
+    .then(result => res.status(200).json(response_handler(result, true)))
+    .catch(err => res.json(response_handler(err, false)));
 }
 
 exports.delete = (req, res) => {
@@ -24,7 +22,7 @@ exports.make_new_domain = (req, res) => {
             return res.status(400).json(response_handler(result, false, "Domain already found"));
         const newDomain = new Domain(req.body);
         newDomain.save().then(result => {
-            return res.status(200).json(response_handler(result, true, "Domain added successfully", { status: result }));
+            return res.status(200).json(response_handler(result, true, "Domain added successfully"));
         }).catch(err => res.status(400).json(response_handler(err, false)));
     }).catch(err => res.status(400).json(response_handler(err, false)));
 }
