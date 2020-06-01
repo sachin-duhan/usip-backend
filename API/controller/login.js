@@ -57,7 +57,6 @@ exports.make_new_user = (req, res) => {
             bcrypt.hash(req.body.password, salt, function(err, hash) {
                 if (err) return res.status(400).json(response_handler(err, false));
                 req.body.password = hash; 
-                // default password = "usip_intern"
                 // default userName = "email of the intern!"
                 const newUser = new User(req.body);
                 newUser.save().then(

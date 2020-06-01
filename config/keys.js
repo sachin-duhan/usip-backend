@@ -12,3 +12,5 @@ module.exports = {
     application_title_for_DB: "Allow USIP intern application",
     bank_title_for_DB: "Allow bank details",
 }
+
+// default password for the intern is = "usip_intern"
