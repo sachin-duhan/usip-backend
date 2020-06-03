@@ -3,13 +3,12 @@ const Report = require('../models/report'),
 
 exports.get_all = (req, res) => {
     Report.find({}).populate({
-        path: 'intern',
-        populate: {
-            path: 'pInfo'
-        }
-    }).then(report => {
-        res.status(200).json(response_handler({}, true, undefined, { reports: report }))
-    }).catch(err => res.status(400).json(response_handler(err, false)));
+            path: 'intern',
+            populate: {
+                path: 'pInfo'
+            }
+        }).then(report => res.status(200).json(response_handler(report, true)))
+        .catch(err => res.status(400).json(response_handler(err, false)))
 }
 
 exports.get_active_interns_report = (req, res) => {
@@ -18,30 +17,34 @@ exports.get_active_interns_report = (req, res) => {
             populate: {
                 path: 'pInfo'
             }
-        }).where({ "intern.pInfo.application_title": req.application_title })
-        .then(report => res.status(200).json(response_handler({}, true, undefined, { reports: report })))
+        }).where({
+            "intern.pInfo.application_title": req.application_title
+        })
+        .then(report => res.status(200).json(response_handler({}, true, undefined, {
+            reports: report
+        })))
         .catch(err => res.status(400).json(response_handler(err, false)))
 }
 
 exports.make_new = (req, res) => {
-    const id = req.params.id; // user Id who is uploading the image!!
+    if (!req.file || !req.file.location)
+        return res.status(400).json(response_handler(undefined, false, "Image upload Error. Kindly retry"));
     Report.find({
-        intern: id,
+        intern: req.params.id, // Intern ID
         start: req.body.start,
         end: req.body.end
     }).then(result => {
-        if (result.length > 0)
+        if (result && result.length > 0)
             return res.status(400).json(response_handler(result, false, "Report already exist"));
         const report = Report({
-            intern: id, // connecting intern schema!!
+            intern: id,
             description: req.body.description,
             start: req.body.start,
             end: req.body.end,
-            reportImage: req.file.path
+            reportImage: req.file.location
         });
-        report.save().then(result => {
-            res.status(200).json(response_handler({}, true, undefined, { report: result }));
-        }).catch(err => res.status(400).json(response_handler(err, false)));
+        report.save().then(result => res.status(200).json(response_handler(result, true, undefined)))
+            .catch(err => res.status(400).json(response_handler(err, false)));
     }).catch(err => res.status(400).json(response_handler(err, false)))
 }
 
@@ -55,22 +58,29 @@ exports.delete = (req, res) => {
 }
 
 exports.get_single_specific = (req, res) => {
-    Report.find({ _id: req.params.id }).populate({
+    Report.find({
+            _id: req.params.id
+        }).populate({
             path: 'intern',
             populate: {
                 path: 'pInfo'
             }
         })
-        .then(report => res.json(response_handler({}, true, undefined, { reports: report })))
+        .then(report => res.json(response_handler({}, true, undefined, {
+            reports: report
+        })))
         .catch(err => res.status(400).json(response_handler(err, false)));
 }
 
 exports.get_all_for_intern_reports = (req, res) => {
-    Report.find({ intern: req.params.id }).populate({
+    Report.find({
+            intern: req.params.id
+        }).populate({
             path: 'intern',
             populate: {
                 path: 'pInfo'
             }
-        }).then(report => res.json(response_handler({}, true, undefined, { reports: report })))
+        })
+        .then(report => res.json(response_handler(report, true)))
         .catch(err => res.status(400).json(response_handler(err, false)));
 }

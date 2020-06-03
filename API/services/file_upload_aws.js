@@ -11,9 +11,6 @@ const s3Config = new aws.S3({
 });
 
 const upload = multer({
-    limits: {
-        fileSize: 1024 * 1024
-    },
     storage: multerS3({
         s3: s3Config,
         bucket: keys.S3_BUCKET_NAME,

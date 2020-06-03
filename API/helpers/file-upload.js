@@ -26,22 +26,21 @@ exports.upload = multer({
     }
 });
 
-exports.get_report_file =  (req, res, next) => {
+exports.get_report_file = (req, res, next) => {
     var options = {
-      root: path.join(__dirname, '..', '..', 'uploads'),
-      dotfiles: 'deny',
-      headers: {
-        'x-timestamp': Date.now(),
-        'x-sent': true
-      }
+        root: path.join(__dirname, '..', '..', 'uploads'),
+        dotfiles: 'deny',
+        headers: {
+            'x-timestamp': Date.now(),
+            'x-sent': true
+        }
     }
     var fileName = req.params.name;
-    console.log(fileName);
-    res.sendFile(fileName, options, function (err) {
-      if (err) {
-        res.status(404).json({
-          error: err
-        });
-      }
+    res.sendFile(fileName, options, function(err) {
+        if (err) {
+            res.status(404).json({
+                error: err
+            });
+        }
     })
-  }
+}
