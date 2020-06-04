@@ -6,6 +6,12 @@ exports.get_all = (req, res) => {
             path: 'intern',
             populate: {
                 path: 'pInfo'
+            },
+            populate:{path:'repOfficer'}
+        }).populate({
+            path: 'intern',
+            populate: {
+                path: 'pInfo'
             }
         }).then(report => res.status(200).json(response_handler(report, true)))
         .catch(err => res.status(400).json(response_handler(err, false)))
@@ -20,30 +26,28 @@ exports.get_active_interns_report = (req, res) => {
         }).where({
             "intern.pInfo.application_title": req.application_title
         })
-        .then(report => res.status(200).json(response_handler({}, true, undefined, {
-            reports: report
-        })))
+        .then(report => res.status(200).json(response_handler(report, true, undefined)))
         .catch(err => res.status(400).json(response_handler(err, false)))
 }
 
 exports.make_new = (req, res) => {
-    if (!req.file || !req.file.location)
-        return res.status(400).json(response_handler(undefined, false, "Image upload Error. Kindly retry"));
+    if(!req.file || !req.file.location)
+        return res.status(400).json(response_handler(undefined,false,"Image upload error. Kindly retry"));
     Report.find({
         intern: req.params.id, // Intern ID
         start: req.body.start,
         end: req.body.end
     }).then(result => {
-        if (result && result.length > 0)
+        if (result.length > 0)
             return res.status(400).json(response_handler(result, false, "Report already exist"));
-        const report = Report({
-            intern: id,
+        const newReport = Report({
+            intern: req.params.id,
             description: req.body.description,
             start: req.body.start,
             end: req.body.end,
             reportImage: req.file.location
         });
-        report.save().then(result => res.status(200).json(response_handler(result, true, undefined)))
+        newReport.save().then(result => res.status(200).json(response_handler(result, true,"Report uploaded successfully.")))
             .catch(err => res.status(400).json(response_handler(err, false)));
     }).catch(err => res.status(400).json(response_handler(err, false)))
 }

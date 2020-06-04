@@ -7,7 +7,7 @@ const taskSchema = new Schema({
         type: String,
         required: true
     },
-    description: String,
+    description: {type:String,default:''},
     created_by: {
         type: Schema.Types.ObjectId,
         required: true,

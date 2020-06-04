@@ -1,5 +1,6 @@
 const Tasks = require('../models/tasks'),
     response_handler = require('../helpers/response_handler').send_formatted_reponse_handler;
+const Intern = require('../models/intern');
 
 exports.get_all = (req, res) => {
     Tasks.find({})
@@ -10,11 +11,12 @@ exports.get_all = (req, res) => {
     }).catch(err => res.status(400).json(response_handler(err, false)));
 }
 
-exports.mark_task_completed = (req, res) => {
+
+exports.update_completiton_and_visibility = (req, res) => {
     Tasks.findOneAndUpdate({ _id: req.params.id }, {
         $set: {
             is_completed: req.body.is_completed,
-            visible_to_intern: req.body.visible_to_intern
+            visible_to_intern: req.body.visible_to_intern ? req.body.visible_to_intern : true
         }
     }, (err, doc) => {
         if (err) return res.status(400).json(response_handler(err, false, "Task cannot be updated"));
@@ -37,10 +39,13 @@ exports.make_new = (req, res) => {
     Tasks.find({ title: req.body.title })
         .then(result => {
             if (result.length > 0)
-                return res.status(200).json(res.status(400).json(response_handler({}, false, "Task already found!!")));
-            newTask = new Tasks(req.body);
-            newTask.save().then(result => {
-                res.status(200).json(response_handler(result, true));
+                return res.status(200).json(res.status(400).json(response_handler({}, false, "Task already found!!")));            
+            Intern.findOne({ _id : req.body.pInfo }).then(doc =>{
+                const task = {...req.body, created_by : doc.repOfficer};
+                const newTask = new Tasks(task);
+                newTask.save().then(result => {
+                    res.status(200).json(response_handler(result, true,"Task added successfully."));
+                }).catch(err => res.status(400).json(response_handler(err, false)));
             }).catch(err => res.status(400).json(response_handler(err, false)));
         }).catch(err => res.status(400).json(response_handler(err, false)));
 }
@@ -59,8 +64,9 @@ exports.delete_task = (req, res) => {
 // task ID must be in param!
 exports.get_specific = (req, res) => {
     const id = req.params.id;
-    Tasks.find({ pInfo: id })
-        .populate({path:'pInfo',populate:'pInfo'}).populate('created_by')
+    Tasks.find({ pInfo: id, visible_to_intern:true })
+        .populate({path:'pInfo',populate:{path:'pInfo'}})
+        .populate('created_by')
         .sort({date:-1})
         .then(task => res.status(200).json(response_handler(task, true)))
         .catch(err => res.status(400).json(response_handler(err, false)));

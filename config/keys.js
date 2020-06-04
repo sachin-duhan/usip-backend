@@ -1,9 +1,9 @@
 module.exports = {
     mongoURI: 'mongodb://sachin:Sachin1234@ds151864.mlab.com:51864/usip_prod',
     JWT_key: 'USIP_application!mainPortal',
-    AWS_ACCESS_KEY: 'AKIAIJMHWUQFZ6CTB7HA',
-    AWS_SECRET_ACCESS_KEY: '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',
-    AWS_REGION: 'ap-south-1',
+    AWS_ACCESS_KEY: 'AKIAJ3SCYQYMIJZQ5TBA',
+    AWS_SECRET_ACCESS_KEY: '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',
+    AWS_REGION: 'us-east-2',
     S3_BUCKET_NAME: 'usip-files',
     // currently not in use!
     SendGrid_API_key: 'SG API KEY',
