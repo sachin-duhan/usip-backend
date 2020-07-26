@@ -15,7 +15,7 @@ exports.get_all_interview_list = (req, res) => {
 exports.get_query_based_interview_list = (req, res) => {
     let marks = req.params.marks ? parseInt(req.params.marks) : 65;
     Interview.find({
-        interview_marks : { $gte : marks }
+        interview_marks: { $gte: marks }
     }).populate({
         path: 'pInfo',
         populate: {
@@ -71,17 +71,14 @@ exports.bulk_Interview_saving = (req, res) => {
         if (err)
             return res.status(304).json(response_handler(err, false, "Interview is not added"));
         return res.status(200).json(response_handler(doc, true, "Interview added successfully.."));
- code
     });
 }
 
 exports.bulk_Interview_updating = (req, res) => {
-    // console.log(req.body.interns);
     Interview.updateMany({
         pInfo: {
             $in: req.body.interns
-        },
-        isDeleted:false
+        }
     }, {
         $set: {
             interview_date: req.body.interview_date,

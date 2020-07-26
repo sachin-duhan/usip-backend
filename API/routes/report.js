@@ -5,6 +5,7 @@ const controller = require('../controller/report');
 const AWS_upload = require('../services/file_upload_aws');
 const helper = require('../helpers/title');
 
+
 router.get('/', controller.get_all);
 
 router.get('/:id', controller.get_single_specific);
