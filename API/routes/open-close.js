@@ -27,7 +27,9 @@ router.get('/application/all', controller.get_all_application);
 
 router.get('/bank/all', controller.get_all_bank);
 
-router.get('/title', helper.get_title,
-    (req, res) => res.status(200).json(response_handler(req.application_title, true, undefined, { title: req.application_title })));
+router.get('/title', helper.get_title, (req, res) =>
+    res.status(200).json(response_handler(req.application_title, true, undefined, {
+        title: req.application_title
+    })));
 
 module.exports = router;

@@ -1,7 +1,6 @@
 const express = require('express'),
     cors = require('cors'),
     app = express(),
-    path = require('path'),
     bodyParser = require('body-parser'),
     helmet = require('helmet'),
     morgan = require('morgan'),
@@ -12,8 +11,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: true
 }));
-
-app.use('/public/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.use(helmet());
 
@@ -30,15 +27,6 @@ app.use(helmet());
 // CORS error : 
 app.use(cors());
 app.options('*', cors());
-app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*'); // * can be replaced with specific URL too...
-    res.header('Access-Control-Allow-Headers', 'Origin,X-Requested-With,Content-Type,Accept,Authorization');
-    if (req.method === 'OPTIONS') {
-        res.header('Access-Control-Allow-Methods', 'PUT,POST,GET,PATCH,DELETE');
-        res.status(200).json({});
-    }
-    next();
-});
 
 // routing
 app.use('/user', require('./API/routes/login')); // handling the Admin and intern login
@@ -52,7 +40,7 @@ app.use('/domain', require('./API/routes/domain')); // for the domains of usip
 app.use('/bug', require('./API/routes/bug')); // handling bugs registeration and proposals!
 app.use('/tasks', require('./API/routes/tasks')); // officer adding tasks for interns!
 app.use('/public', require('./API/routes/file'));
-app.use('/interview',require('./API/routes/interview'));
+app.use('/interview', require('./API/routes/interview'));
 
 // error handling
 app.use((req, res, next) => {

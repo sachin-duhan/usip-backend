@@ -7,7 +7,7 @@ const loginCredSchema = new Schema({
         required: true,
         ref: 'Intern'
     },
-    userName: { 
+    userName: {
         // an email is used!
         type: String,
         require: true,
@@ -26,7 +26,7 @@ const loginCredSchema = new Schema({
         type: String,
         default: 'intern',
         required: true,
-        enum: ['intern', 'admin','officer']
+        enum: ['intern', 'admin', 'officer']
     },
     isDeleted: {
         type: Boolean,
