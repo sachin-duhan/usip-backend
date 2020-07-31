@@ -1,13 +1,15 @@
 const http = require('http');
 const mongoose = require('mongoose');
+const keys = require('./config/keys');
 
 // getting the utlities
 const app = require('./app');
 
 //connection and DB found!
 const port = process.env.PORT || 4000;
-const MongoURI = 'mongodb://duhan:sachin123@ds013599.mlab.com:13599/usip-dtu';
+const MongoURI = keys.mongoURI;
 const server = http.createServer(app);
+
 server.listen(port, () => {
     console.log(`Listening on http://localhost:${port}`);
 });

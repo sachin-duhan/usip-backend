@@ -1,5 +1,5 @@
 module.exports = {
-    mongoURI: 'mongodb://sachin:Sachin1234@ds151864.mlab.com:51864/usip_prod',
+    mongoURI: 'mongodb://duhan:sachin123@ds013599.mlab.com:13599/usip-dtu',
     JWT_key: 'USIP_application!mainPortal',
     AWS_ACCESS_KEY: 'AKIAJ3SCYQYMIJZQ5TBA',
     AWS_SECRET_ACCESS_KEY: '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',
