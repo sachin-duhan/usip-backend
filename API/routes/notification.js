@@ -8,7 +8,6 @@ router.get('/public', controller.get_public_notification);
 router.get('/intern', controller.get_intern_notification);
 
 router.post('/', (req, res, next) => {
-    console.log(req.body);
     if (req.body.is_image == 'true')
         AWS_upload.single("image");
     else next();

@@ -14,13 +14,14 @@ exports.get_intern_notification = (req, res) => {
 }
 
 exports.make_new_notification = (req, res) => {
-    if (!req.body.title || !req.body.description) return res.status(400).json(response_handler(err, false, "Invalid input"));
+    if (!req.body.title || !req.body.description) return res.status(400).json(response_handler({}, false, "Invalid input"));
     req.body.fileLocation = req.file.location ? req.file.location : null;
     const newNotification = new Notification(req.body);
     newNotification.save()
         .then(notification => res.status(200).json(response_handler(notification, true, "Notification added successfully")))
         .catch(err => res.status(400).json(response_handler(err, false, "")));
 }
+
 
 exports.update = (req, res) => {
     const id = req.params.id;

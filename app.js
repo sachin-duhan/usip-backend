@@ -29,6 +29,7 @@ app.use(cors());
 app.options('*', cors());
 
 // routing
+app.use('/dashboard', require('./API/routes/dashboard')); // handling the dashboard request!
 app.use('/user', require('./API/routes/login')); // handling the Admin and intern login
 app.use('/register', require('./API/routes/register')); // handling the application forms of the new inetrns
 app.use('/report', require('./API/routes/report')); // handling the reports submission router for the intern

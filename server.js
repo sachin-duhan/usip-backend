@@ -8,6 +8,7 @@ const app = require('./app');
 //connection and DB found!
 const port = process.env.PORT || 4000;
 const MongoURI = keys.mongoURI;
+// const MongoURI = 'mongodb://localhost:27017/usip-prod';
 const server = http.createServer(app);
 
 server.listen(port, () => {

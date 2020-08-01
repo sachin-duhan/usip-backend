@@ -1,13 +1,12 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-// model for notification : 
 const notificationSchema = new Schema({
     title: {
         type: String,
         required: true
     },
-    description: { type: String, require: false },
+    description: String,
     fileLocation: {
         type: String,
         default: null
