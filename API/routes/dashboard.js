@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const response_handler = require('../helpers/response_handler').send_formatted_reponse_handler;
+
 const Application = require('../models/register'),
     Intern = require('../models/intern'),
     Officer = require('../models/officer'),
@@ -9,20 +10,33 @@ const Application = require('../models/register'),
     Report = require('../models/report');
 
 router.get('/', async(req, res) => {
+    Promise.all([
+        // parallel processing of queries!!
+        Application.find({ isDeleted: false }).countDocuments(),
+        Intern.find({ isDeleted: false }).countDocuments(),
+        Officer.find({ isDeleted: false }).countDocuments(),
+        Report.find({ isDeleted: false }).countDocuments(),
+        // make sure that order is not changed!!
+        Application.find({ isDeleted: false }).sort({ date: -1 }).limit(5).populate('application_title'),
+        Intern.find({ isDeleted: false }).sort({ date: -1 }).limit(12).populate('pInfo'),
+        Report.find({ isDeleted: false }).sort({ date: -1 }).limit(5).populate({ path: 'intern', populate: { path: 'pInfo' } }),
+        Officer.find({ isDeleted: false }).sort({ date: -1 }).limit(5),
+        Notification.find({ isDeleted: false }).sort({ date: -1 }).limit(5)
+    ]).then(([application_count, intern_count, officer_count, reports_count, applications, interns, reports, officers, notifications]) => {
+        var count = { application_count, intern_count, officer_count, reports_count };
+        return res.status(200).json(response_handler({ count, applications, interns, reports, officers, notifications }, true));
+    }).catch(err => res.status(400).json(response_handler(err, false)));
+});
 
-    var count = { application: 0, intern: 0, officer: 0, reports: 0 };
-    count.application = await Application.find({ isDeleted: false }).countDocuments();
-    count.intern = await Intern.find({ isDeleted: false }).countDocuments();
-    count.officer = await Officer.find({ isDeleted: false }).countDocuments();
-    count.reports = await Report.find({ isDeleted: false }).countDocuments();
-
-    const applications = await Application.find({ isDeleted: false }).sort({ date: -1 }).limit(5).populate('application_title');
-    const interns = await Intern.find({ isDeleted: false }).sort({ date: -1 }).limit(12).populate('pInfo');
-    const reports = await Report.find({ isDeleted: false }).sort({ date: -1 }).limit(5).populate({ path: 'intern', populate: { path: 'pInfo' } });
-    const officers = await Officer.find({ isDeleted: false }).sort({ date: -1 }).limit(5);
-    const notifications = await Notification.find({ isDeleted: false }).sort({ date: -1 }).limit(5);
-
-    return res.status(200).json(response_handler({ count, applications, interns, reports, officers, notifications }, true));
+router.get('/intern/:id', (req, res) => {
+    if (!req.params.id) return res.status(400).json(response_handler({}, false, "Intern ID is required"));
+    Promise.all([
+        Report.find({ intern: req.params.id }).populate({ path: 'intern', populate: { path: 'pInfo' } }).sort({ date: -1 }),
+        Intern.findOne({ _id: req.params.id }).populate({ path: 'pInfo', populate: { path: 'application_title' } }).populate('repOfficer'),
+        Notification.find({}).sort({ date: -1 }).limit(20),
+    ]).then(([reports, interns, notifications]) => {
+        return res.status(200).json(response_handler({ reports, interns, notifications }, true));
+    }).catch(err => res.status(400).json(response_handler(err, false)));
 });
 
 module.exports = router;

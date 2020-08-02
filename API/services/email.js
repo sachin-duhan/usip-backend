@@ -3,8 +3,7 @@ const keys = require('../../config/keys');
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY || keys.SendGrid_API_key);
 
-exports.send_confirmation_email_after_booking = (req, res) => {
-
+exports.send_email_to_students = (req, res) => {
     const msg = {
         to: req.body.email,
         from: 'admin@usip.com',

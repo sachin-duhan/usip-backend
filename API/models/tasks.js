@@ -27,6 +27,10 @@ const taskSchema = new Schema({
         type: Boolean,
         default: true
     },
+    deadline:{
+        type:Date,
+        required:true
+    },
     date: {
         // date of creation
         type: Date,
