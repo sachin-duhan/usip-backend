@@ -23,7 +23,7 @@ router.get('/', async(req, res) => {
         Officer.find({ isDeleted: false }).sort({ date: -1 }).limit(5),
         Notification.find({ isDeleted: false }).sort({ date: -1 }).limit(5)
     ]).then(([application_count, intern_count, officer_count, reports_count, applications, interns, reports, officers, notifications]) => {
-        var count = { application_count, intern_count, officer_count, reports_count };
+        var count = { application: application_count, intern: intern_count, officer: officer_count, reports: reports_count };
         return res.status(200).json(response_handler({ count, applications, interns, reports, officers, notifications }, true));
     }).catch(err => res.status(400).json(response_handler(err, false)));
 });
