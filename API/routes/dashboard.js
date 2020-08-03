@@ -14,14 +14,14 @@ router.get('/', async(req, res) => {
         // parallel processing of queries!!
         Application.find({ isDeleted: false }).countDocuments(),
         Intern.find({ isDeleted: false }).countDocuments(),
-        Officer.find({ isDeleted: false }).countDocuments(),
-        Report.find({ isDeleted: false }).countDocuments(),
+        Officer.find({}).countDocuments(),
+        Report.find({}).countDocuments(),
         // make sure that order is not changed!!
         Application.find({ isDeleted: false }).sort({ date: -1 }).limit(5).populate('application_title'),
         Intern.find({ isDeleted: false }).sort({ date: -1 }).limit(12).populate('pInfo'),
-        Report.find({ isDeleted: false }).sort({ date: -1 }).limit(5).populate({ path: 'intern', populate: { path: 'pInfo' } }),
-        Officer.find({ isDeleted: false }).sort({ date: -1 }).limit(5),
-        Notification.find({ isDeleted: false }).sort({ date: -1 }).limit(5)
+        Report.find({}).sort({ date: -1 }).limit(5).populate({ path: 'intern', populate: { path: 'pInfo' } }),
+        Officer.find({}).sort({ date: -1 }).limit(5),
+        Notification.find({ isDeleted: false }).sort({ date: -1 }).limit(6)
     ]).then(([application_count, intern_count, officer_count, reports_count, applications, interns, reports, officers, notifications]) => {
         var count = { application: application_count, intern: intern_count, officer: officer_count, reports: reports_count };
         return res.status(200).json(response_handler({ count, applications, interns, reports, officers, notifications }, true));
