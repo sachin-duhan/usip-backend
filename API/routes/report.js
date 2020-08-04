@@ -16,6 +16,8 @@ router.get('/intern/:id', controller.get_all_for_intern_reports);
 
 router.post('/:id', AWS_upload.single("image"), controller.make_new);
 
+router.put('/update/:id',controller.update);
+
 router.delete('/:id', controller.delete);
 
 module.exports = router;

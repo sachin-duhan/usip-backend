@@ -61,6 +61,20 @@ exports.delete = (req, res) => {
     });
 }
 
+exports.update = (req, res) => {
+    Report.findOneAndUpdate({_id:req.params.id}, {
+        $set: {
+            description: req.body.description,
+            start:req.body.start,
+            end:req.body.end
+        }
+    }, (err) => {
+        if (err)
+            return res.status(400).json(response_handler(err, false))
+        return res.status(200).json(response_handler({}, true, "report updated successfully"));
+    });
+}
+
 exports.get_single_specific = (req, res) => {
     Report.find({
             _id: req.params.id
