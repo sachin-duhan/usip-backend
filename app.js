@@ -24,7 +24,12 @@ app.use(helmet());
 //     stream: accessLogStream
 // }))
 
-var whitelist = ['http://usip-dtu-admin.netlify.app', 'https://usip-dtu.netlify.app', 'https://usip-dtu-officer.netlify.app/']
+var whitelist = [
+    'http://usip-dtu-admin.netlify.app',
+    'https://usip-dtu.netlify.app',
+    'https://usip-dtu-officer.netlify.app'
+];
+
 var corsOptions = {
     origin: function(origin, callback) {
         if (whitelist.indexOf(origin) !== -1) callback(null, true);
@@ -33,8 +38,8 @@ var corsOptions = {
 }
 
 // CORS error : 
+app.options('*', cors());
 app.use(cors(corsOptions));
-app.options('*', cors(corsOptions));
 
 // routing
 app.use('/dashboard', require('./API/routes/dashboard')); // handling the dashboard request!
