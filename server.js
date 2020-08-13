@@ -5,8 +5,8 @@ const keys = require('./config/keys');
 const app = require('./app');
 
 const port = process.env.PORT || 4000;
-// const MongoURI = keys.mongoURI; // connect this during development!! 
-const MongoURI = 'mongodb://localhost:27017/usip-prod'; // uncomment during development if u have local DB ready!!
+const MongoURI = keys.mongoURI; // connect this during development!! 
+// const MongoURI = 'mongodb://localhost:27017/usip-prod'; // uncomment during development if u have local DB ready!!
 const server = http.createServer(app);
 
 server.listen(port, () => {
