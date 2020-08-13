@@ -24,9 +24,17 @@ app.use(helmet());
 //     stream: accessLogStream
 // }))
 
+var whitelist = ['http://usip-dtu-admin.netlify.app', 'https://usip-dtu.netlify.app', 'https://usip-dtu-officer.netlify.app/']
+var corsOptions = {
+    origin: function(origin, callback) {
+        if (whitelist.indexOf(origin) !== -1) callback(null, true);
+        else callback(new Error('OOPS! You are not autherized!'));
+    }
+}
+
 // CORS error : 
-app.use(cors());
-app.options('*', cors());
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 
 // routing
 app.use('/dashboard', require('./API/routes/dashboard')); // handling the dashboard request!
@@ -40,7 +48,7 @@ app.use('/allow', require('./API/routes/open-close')); // application and bank d
 app.use('/domain', require('./API/routes/domain')); // for the domains of usip
 app.use('/bug', require('./API/routes/bug')); // handling bugs registeration and proposals!
 app.use('/tasks', require('./API/routes/tasks')); // officer adding tasks for interns!
-app.use('/public', require('./API/routes/file'));
+// app.use('/public', require('./API/routes/file'));
 app.use('/interview', require('./API/routes/interview'));
 
 // error handling
