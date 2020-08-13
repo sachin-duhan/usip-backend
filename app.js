@@ -25,7 +25,7 @@ app.use(helmet());
 // }))
 
 var whitelist = [
-    'http://usip-dtu-admin.netlify.app',
+    'https://usip-dtu-admin.netlify.app',
     'https://usip-dtu.netlify.app',
     'https://usip-dtu-officer.netlify.app'
 ];
